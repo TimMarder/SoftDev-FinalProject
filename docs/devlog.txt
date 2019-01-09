@@ -25,4 +25,14 @@ jaredA: 2018-01-07:
 Created database schema for design doc
 ---------------------------
 all: 2018-01-09:
-Implemented edits for devlog.txt
+Implemented edits for design.txt
+
+claraM: 2018-01-09:
+Added functionality section, and added components list
+Added birthday and address to user_contacts db schema
+
+vincentL: 2018-01-09:
+Modified component map, added APIs
+
+jaredA: 2018-01-09:
+Re-made to-do list to make it more specific
