@@ -23,3 +23,6 @@ Made to-do list for design doc
 ---------------------------
 jaredA: 2018-01-07:
 Created database schema for design doc
+---------------------------
+all: 2018-01-09:
+Implemented edits for devlog.txt
