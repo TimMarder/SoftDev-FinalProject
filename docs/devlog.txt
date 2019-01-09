@@ -13,3 +13,13 @@ Clara Mohri
 ==============================================================
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
+claraM: 2019-01-07:
+Made site map for design doc
+Uploaded API pdfs 
+---------------------------
+vincentL: 2018-01-07:
+Created devlog
+Made to-do list for design doc
+---------------------------
+jaredA: 2018-01-07:
+Created database schema for design doc
