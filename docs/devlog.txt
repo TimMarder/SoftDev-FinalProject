@@ -36,3 +36,7 @@ Modified component map, added APIs
 
 jaredA: 2018-01-09:
 Re-made to-do list to make it more specific
+
+claraM: 2018-01-09 23:21
+Created requirements.txt file
+Began testing out flask-mail functionality for eventually sending out an email
