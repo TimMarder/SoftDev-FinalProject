@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block nav %} {% endblock %}
+
+{% block content %}
+
+    <div class = "row">
+        <div class = "col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
+        <div class = "col-lg-6 col-md-6 col-sm-8 col-xs-10">
+            <form class = "auth-form" method = "POST" action = "#">
+                <h2>Signup</h2>
+
+                <label for="username-input">Username: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="username-input" name="username">
+                </div>
+
+                <label for="password-input">Password: </label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password-input" name="password">
+                </div>
+
+                <label for="confirm-password-input">Confirm Password: </label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="confirm-password-input" name="confirm-password">
+                </div>
+
+                <h5>Security Question</h5>
+                <label for="security-question">Question: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="password-input" name="security-question">
+                </div>
+
+                <label for="password-input">Answer: </label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password-input" name="password">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+        </div>
+        <div class = "col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
+    </div>
+
+{% endblock %}
