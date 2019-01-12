@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>      
+      login
+    </title>
+  </head>
+  
+  <body>
+    <h1> Login page</h1>
+    {% if error %}
+    <h2>{{ error }}</h2>
+    {% endif %}
+    <form method="POST" action="/login">
+      <input type="text" name="username">
+      <input type="password" name="password">
+      <input type="submit" name="subl" value="login">
+    </form>
+    <br>
+    Don't have an account?
+    <a href = "/create_account"> Create one.</a>
+    
+  </body>
+</html>
