@@ -1,0 +1,25 @@
+import sqlite3
+
+DB_FILE = "app.db"
+
+
+
+# add user to database
+# if table users does not exist, then create table users
+def add_user(username,password):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "INSERT INTO users (username, password) VALUES(?, ?)"
+    try:
+        c.execute(command, (username, password))
+    except:
+        create = "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)"
+        c.execute(create)
+    c.execute(command, (username, password))
+    db.commit()
+    db.close()
+
+def authenticate(username, password):
+    pass
+
+
