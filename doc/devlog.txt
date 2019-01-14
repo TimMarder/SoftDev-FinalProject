@@ -40,3 +40,14 @@ Re-made to-do list to make it more specific
 claraM: 2018-01-09 23:21
 Created requirements.txt file
 Began testing out flask-mail functionality for eventually sending out an email
+
+claraM: 2018-01-11
+Worked on log-in backend, combining with database
+
+claraM: 2018-01-13
+Finished login system, created basic landing page
+Created database table for events, integrated with landing page
+Finished add user functionality
+Added flash messages for login/create account.
+
+
