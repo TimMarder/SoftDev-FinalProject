@@ -7,34 +7,34 @@ Event Calendar is a tool that organizes events and allows users to share events 
 
 ## Instructions
 1. Clone this repo
-'''
+```
 $ git clone https://github.com/VinnyLin72/SoftDev-FinalProject.git
-'''
+```
 
 2. Activate your virtual environment
-'''
+```
 $ python3 -m venv venv
 $ . venv/bin/activate
-'''
+```
 
 3. Enter directory
-'''
+```
 $ cd SoftDev-FinalProject
-'''
+```
 
 4. Install dependencies
-'''
+```
 $ pip install -r requirements.txt
-'''
+```
 
 5. Procure API keys(instructions [below](https://github.com/VinnyLin72/SoftDev-FinalProject#dependencies))
 
 6. Edit keys.json to add your own keys
 
 7. Run app
-'''
+```
 $ python app.py
-'''
+```
 
 8. Open your web browser and open `localhost:5000`
 
