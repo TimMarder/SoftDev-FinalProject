@@ -7,6 +7,7 @@ def create_table():
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     c.execute("CREATE TABLE users (user TEXT, password TEXT)")
+    c.execute("CREATE TABLE events (name TEXT, user TEXT, date TEXT, location TEXT, description TEXT, tags TEXT, people TEXT)")
     #print('created table')
 
     hardcoded_vals = [('clara', 'm'), ('jared', 'a'), ('vincet', 'l')]
@@ -15,7 +16,10 @@ def create_table():
         print(i)
     params = ("topher", "m")
     c.execute("INSERT INTO users VALUES(?, ?)", params)
-    print("Added clara")
+
+    val = ('birthday', 'clara', '02-18-2019', 'nyc', 'my birthday', 'birthday', 'none')
+    c.execute("INSERT INTO events VALUES(?, ?, ?, ?, ?, ?, ?)", val)
+    
     db.commit()
     db.close()
 
@@ -53,3 +57,16 @@ def add_user(username, password):
     c.execute("INSERT INTO users VALUES(?, ?)", params)
     db.commit()
     db.close()
+
+# get events for certain username
+def get_events(username):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = 'SELECT * FROM events where "user" = "' + username + '"'
+    data = c.execute(command)
+    retL = []
+    for row in data:
+        retL.append(row)    
+    db.close()
+    return retL
+    
