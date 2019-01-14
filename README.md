@@ -27,7 +27,7 @@ $ cd SoftDev-FinalProject
 $ pip install -r requirements.txt
 '''
 
-5. Procure API keys(instructions [below](https://github.com/VinnyLin72/SoftDev-FinalProject#dependencies)
+5. Procure API keys(instructions [below](https://github.com/VinnyLin72/SoftDev-FinalProject#dependencies))
 
 6. Edit keys.json to add your own keys
 
@@ -44,6 +44,14 @@ $ python app.py
 
 ## Dependencies
 
+1. urllib - used to get JSON files from APIs
+2. json - used to parse JSON files
+3. flask - allows app to run on 'localhost'
+   - imported through pip installing reuirements.txt
+4. passlib - used to hash passwords
+   - imported through pip installing reuirements.txt
+5. flask-mail - used to send emails through app
+
 ### APIs
 
 1. Holiday API
@@ -58,3 +66,4 @@ $ python app.py
    - Sign up [here](https://openweathermap.org/api) to recieve a key
    - API tells us the weather for an area by name, coordinates, zip code or city id 
    - We used this API to display the weather at the time and place of the event
+
