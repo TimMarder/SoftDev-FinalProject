@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block nav %} {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-1 col-xs-1"></div>
+    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10">
+        <form class="auth-form" method="POST" action="{{ url_for('create_event') }}">
+            <h2>Signup</h2>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+                <label for="name-input">Name: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="name-input" name="name">
+                    <ul class="list-group my-dropdown">
+                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item">Dapibus ac facilisis in</li>
+                        <li class="list-group-item">Morbi leo risus</li>
+                        <li class="list-group-item">Porta ac consectetur ac</li>
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
+                </div>
+
+                <label for="description-input">Description: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="description-input" name="description">
+                </div>
+
+                <h5>Event Information</h5>
+                <label for="location-input">Location: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="location-input" name="location">
+                </div>
+
+                <label for="date-input">Date: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="date-input" name="date" placeholder="mm/dd/yyyy">
+                </div>
+
+                <label for="time-input">Time: </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="time-input" name="time" placeholder="hh:mm">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Event</button>
+            </form>
+        </div>
+        <div class = "col-lg-2 col-md-2 col-sm-1 col-xs-1"></div>
+    </div>
+
+{% endblock %}

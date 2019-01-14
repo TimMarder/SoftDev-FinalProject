@@ -15,39 +15,42 @@ Clara Mohri
 
 claraM: 2019-01-07:
 Made site map for design doc
-Uploaded API pdfs 
+Uploaded API pdfs
 ---------------------------
-vincentL: 2018-01-07:
+vincentL: 2019-01-07:
 Created devlog
 Made to-do list for design doc
 ---------------------------
-jaredA: 2018-01-07:
+jaredA: 2019-01-07:
 Created database schema for design doc
 ---------------------------
-all: 2018-01-09:
+all: 2019-01-09:
 Implemented edits for design.txt
 
-claraM: 2018-01-09:
+claraM: 2019-01-09:
 Added functionality section, and added components list
 Added birthday and address to user_contacts db schema
 
-vincentL: 2018-01-09:
+vincentL: 2019-01-09:
 Modified component map, added APIs
 
-jaredA: 2018-01-09:
+jaredA: 2019-01-09:
 Re-made to-do list to make it more specific
 
-claraM: 2018-01-09 23:21
+claraM: 2019-01-09 23:21
 Created requirements.txt file
 Began testing out flask-mail functionality for eventually sending out an email
 
-claraM: 2018-01-11
+claraM: 2019-01-11
 Worked on log-in backend, combining with database
 
-claraM: 2018-01-13
+claraM: 2019-01-13
 Finished login system, created basic landing page
 Created database table for events, integrated with landing page
 Finished add user functionality
 Added flash messages for login/create account.
 
-
+jaredA: 2019: 2019-01-14
+Added more feedback to user on signup/login pages
+Added page for creating events
+Added more functionality to landing page

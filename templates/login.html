@@ -7,34 +7,32 @@
     <div class = "row">
         <div class = "col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
         <div class = "col-lg-6 col-md-6 col-sm-8 col-xs-10">
-            <form class = "auth-form" method = "POST" action = "/login">
+            <form class = "auth-form" method = "POST" action = "{{ url_for('login') }}">
                 <h2>Login</h2>
 
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		  {% for message in messages %}
-		<div class="alert alert-primary" role="alert">
-		  {{ message }}
-		  </div>
-		  {% endfor %}
+                <label for="email-input">Email Address</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="email-input" name="email">
+                    </div>
 
-		{% endif %}
-		{% endwith %}
-		
-                <label for="username-input">Username</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="username-input" name="username">
-                </div>
+                    <label for="password-input">Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password-input" name="password">
+                    </div>
 
-                <label for="password-input">Password</label>
-                <div class="input-group">
-                    <input type="password" class="form-control" id="password-input" name="password">
-                </div>
-
-                <label>Dont't have an account? <a href = "/signup">Create one</a></label><br>
-                <button type="submit" class="btn btn-primary">Log In</button>
-            </form>
+                    <label>Don't have an account? <a href = "{{ url_for('signup') }}">Create one</a></label><br>
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                </form>
         </div>
         <div class = "col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
     </div>
