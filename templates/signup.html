@@ -7,8 +7,21 @@
     <div class = "row">
         <div class = "col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
         <div class = "col-lg-6 col-md-6 col-sm-8 col-xs-10">
-            <form class = "auth-form" method = "POST" action = "#">
-                <h2>Signup</h2>
+            <form class = "auth-form" method = "POST" action = "/create_acc">
+              <h2>Signup</h2>
+
+
+
+	      {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for message in messages %}
+                <div class="alert alert-primary" role="alert">
+                  {{ message }}
+                  </div>
+                  {% endfor %}
+
+                {% endif %}
+                {% endwith %}
 
                 <label for="username-input">Username: </label>
                 <div class="input-group">
@@ -36,6 +49,8 @@
                     <input type="password" class="form-control" id="password-input" name="password">
                 </div>
 
+		
+		
                 <button type="submit" class="btn btn-primary">Sign Up</button>
             </form>
         </div>
