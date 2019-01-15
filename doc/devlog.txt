@@ -50,7 +50,11 @@ Created database table for events, integrated with landing page
 Finished add user functionality
 Added flash messages for login/create account.
 
-jaredA: 2019: 2019-01-14
+jaredA: 2019-01-14
 Added more feedback to user on signup/login pages
 Added page for creating events
 Added more functionality to landing page
+
+jaredA: 2019-01-15
+Added suggestions for adding users to events (autocompletion)
+Application will now automatically clear old events

@@ -12,7 +12,7 @@ def create_table():
     c.execute("CREATE TABLE if not exists users (name TEXT, email TEXT, password TEXT, security_question TEXT, security_answer TEXT)")
     c.execute("CREATE TABLE if not exists events (name TEXT, user TEXT, date TEXT, location TEXT, description TEXT, tags TEXT, people TEXT)")
     # whose is to indicate whose contact this is, since all contacts for all users are stored in same table
-    c.execute("CREATE TABLE if not exists contacts (whose TEXT, first TEXT, last TEXT, email TEXT, username TEXT, birthday TEXT, address TEXT)")
+    c.execute("CREATE TABLE if not exists contacts (whose TEXT, first TEXT, last TEXT, email TEXT, birthday TEXT, address TEXT)")
     db.commit()
     db.close()
 
@@ -73,7 +73,14 @@ def get_events_by_user(email):
     db.close()
     return data
 
-# add event 
+def clear_old_events(email):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    c.execute("DELETE FROM events WHERE date < datetime('now')")
+    db.commit()
+    db.close() 
+
+# add event
 def add_event(user, name, desc, date, location, tags, people):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -82,23 +89,23 @@ def add_event(user, name, desc, date, location, tags, people):
     db.commit()
     db.close()
 
-def get_users_by_prefix(search):
+def get_contacts_by_prefix(email, search):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    users = c.execute("SELECT name, email FROM users").fetchall()
+    users = c.execute("SELECT * FROM contacts WHERE whose = ?", (email,)).fetchall()
     results = []
     for user in users:
-        if search.lower() == user[0][0:len(search)].lower() or search.lower() == user[1][0:len(search)].lower():
-            results.append({"email": user[1], "name": user[0]})
+        if search.lower() == user[1][0:len(search)].lower() or search.lower() == user[2][0:len(search)].lower() or search.lower() == user[3][0:len(search)].lower():
+            results.append({"first": user[1], "last": user[2], "email": user[3], "bday": user[4], "address": user[5]})
     db.close()
     return results
 
-# add a contact 
-def add_contact(user, first, last, email, username, bday, address):
+# add a contact
+def add_contact(user, first, last, email, bday, address):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    params = (user, first, last, email, username, bday, address)
-    c.execute("INSERT INTO contacts VALUES(?, ?, ?, ?, ?, ?, ?)", params)
+    params = (user, first, last, email, bday, address)
+    c.execute("INSERT INTO contacts VALUES(?, ?, ?, ?, ?, ?)", params)
     db.commit()
     db.close()
 
@@ -109,7 +116,7 @@ def get_contacts_by_user(email):
     users = c.execute("SELECT * FROM contacts WHERE whose = ?", (email,)).fetchall()
     retL = []
     for i in users:
-        retL.append({"first": i[1], "last": i[2], "email": i[3], "username": i[4], "bday": i[5], "address": i[6]})
+        retL.append({"first": i[1], "last": i[2], "email": i[3], "bday": i[4], "address": i[5]})
     #print(retL)
     return retL
     db.commit()

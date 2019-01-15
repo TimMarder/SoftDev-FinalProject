@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 
-from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user, get_users_by_prefix, add_contact, get_contacts_by_user
+from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user, get_contacts_by_prefix, add_contact, get_contacts_by_user, clear_old_events
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -15,13 +15,14 @@ MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
 @app.route("/", methods=["GET"])
 def index():
     if "user" in session:
-        events = get_events_by_user(session['user'])
+        events = get_events_by_user(session.get("user"))
+        clear_old_events(session.get("user"))
         eventlist = [(event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p") ) for event in events]
         print(events)
         return render_template("landing.html", user = session['user'], eventlist = eventlist )
     return redirect(url_for("login"))
 
-# authenticate 
+# authenticate
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "user" in session:
@@ -71,7 +72,7 @@ def signup():
             add_user(name, email, password, security_question, security_answer)
         return redirect(url_for("login"))
 
-# logout 
+# logout
 @app.route("/logout", methods=["GET"])
 def logout():
     if "user" in session:
@@ -106,13 +107,13 @@ def create_event():
             add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people)
             return redirect(url_for("index"))
 
-# def process_location(location):
-#     req_url = "http://www.mapquestapi.com/geocoding/v1/address?outFormat=json&key=" + MAPQUEST_KEY + "&location=" + urllib.parse.urlencode({"location": location})
-#     req = urllib.request.Request(req_url)
-#     json_response = json.loads(urllib.request.urlopen(req).read())
-#     lat = json_response["results"][0]["locations"]["latLng"]["lat"]
-#     lon = json_response["results"][0]["locations"]["latLng"]["lon"]
-#     return (lat, lon)
+def process_location(location):
+    req_url = "http://www.mapquestapi.com/geocoding/v1/address?outFormat=json&key=" + MAPQUEST_KEY + "&location=" + urllib.parse.urlencode({"location": location})
+    req = urllib.request.Request(req_url)
+    json_response = json.loads(urllib.request.urlopen(req).read())
+    lat = json_response["results"][0]["locations"]["latLng"]["lat"]
+    lon = json_response["results"][0]["locations"]["latLng"]["lon"]
+    return (lat, lon)
 
 # get location image using API
 def get_location_image(location):
@@ -122,11 +123,19 @@ def get_location_image(location):
     img_url = json_response["results"][0]["locations"][0]["mapUrl"]
     return img_url
 
+def get_location_weather(location, date):
+    lat, lon = process_location(location)
+    req_url = "http://api.openweathermap.org/data/2.5/forecast?lat=" + str(lat) + "&lon=" + str(lon)
+    json_response = json.loads(urllib.request.urlopen(req).read())
+
+
 # get user suggestions
 @app.route("/user_suggestions")
 def user_suggestions():
+    if not "user" in session:
+        return json.dumps({})
     search = request.args.get("search")
-    results = get_users_by_prefix(search)
+    results = get_contacts_by_prefix(session.get("user"), search)
     json_response = json.dumps(results)
     return json_response
 
@@ -138,8 +147,10 @@ def test():
 
 @app.route("/contacts")
 def contacts():
-    c = get_contacts_by_user(session['user'])    
-    return render_template("contacts.html", contact_list = c)
+    if not "user" in session:
+        return redirect(url_for("login"))
+    c = get_contacts_by_user(session.get("user"))
+    return render_template("contacts.html", contact_list = c, user = session.get("user"))
 
 # add contacts
 @app.route("/add_contacts", methods = ["GET", "POST"])
@@ -147,16 +158,15 @@ def add_contacts():
     if not "user" in session:
         return redirect(url_for("login"))
     if request.method == "GET":
-        return render_template("add_contact.html", user = session['user'])
+        return render_template("add_contact.html", user = session.get("user"))
     else:
         fname = request.form.get("fname")
         lname = request.form.get("lname")
         email = request.form.get("email")
-        username = request.form.get("username")
         bday = request.form.get("bday")
         address = request.form.get("address")
-        print (session['user'], fname, lname, email, username, bday, address)
-        add_contact(session['user'], fname, lname, email, username, bday, address)
+        print (session['user'], fname, lname, email, bday, address)
+        add_contact(session['user'], fname, lname, email, bday, address)
         return (redirect("/contacts"))
 
 

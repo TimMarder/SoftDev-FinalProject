@@ -9,7 +9,7 @@
   <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">
     <h2 style = "margin: 20px;">Address Book</h2>
     <!-- would like to have this button on same line but aligned right-->
-    
+
     <a class="btn btn-primary" href="/add_contacts" role="button" style = "margin: 20px;">Add new contact</a>
   <a class="btn btn-primary" href="/" role="button" style = "margin: 20px;">Back</a></div>
 </div>
@@ -18,7 +18,7 @@
 <div style = "margin: 20px;">
 {% for i in contact_list %}
 <b>{{i["first"]}} {{i["last"]}}</b><br>
-Email: <a href = "mailto:" + {{i["email"]}} > {{i["email"]}}</a> <br>
+Email: <a href = "mailto: {{ i['email'] }}" >{{i["email"]}}</a> <br>
 Address: {{i["address"]}}<br><hr>
 {%endfor%}
 </div>

@@ -76,7 +76,7 @@
                         for(let i = 0; i < res.length; i++){
                             let newLi = document.createElement("li");
                             newLi.classList.add("list-group-item");
-                            newLi.innerHTML = res[i].name + " - " + res[i].email;
+                            newLi.innerHTML = res[i].first + " " + res[i].last + " - " + res[i].email;
 
                             userDropdown.appendChild(newLi);
                             newLi.addEventListener("mouseover", function(e){
