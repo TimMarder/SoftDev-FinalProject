@@ -12,12 +12,17 @@
                 <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                     <ul class="navbar-nav ml-auto">
                         {% if user %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-                            </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                        </li>
+			<li class = "nav-item">
+			  <a class = "nav-link" href = "{{ url_for('contacts') }}">Address Book </a>
+			</li>
+			
+			<li class="nav-item">
+                          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+			    
                         {% else %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('login') }}">Login</a>

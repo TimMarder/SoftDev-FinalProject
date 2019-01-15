@@ -4,13 +4,14 @@ from datetime import datetime
 
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 
-from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user, get_users_by_prefix
+from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user, get_users_by_prefix, add_contact, get_contacts_by_user
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
 
 MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
 
+# login page
 @app.route("/", methods=["GET"])
 def index():
     if "user" in session:
@@ -20,6 +21,7 @@ def index():
         return render_template("landing.html", user = session['user'], eventlist = eventlist )
     return redirect(url_for("login"))
 
+# authenticate 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "user" in session:
@@ -35,6 +37,7 @@ def login():
     else:
         return render_template("login.html")
 
+# sign up
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if "user" in session:
@@ -68,12 +71,14 @@ def signup():
             add_user(name, email, password, security_question, security_answer)
         return redirect(url_for("login"))
 
+# logout 
 @app.route("/logout", methods=["GET"])
 def logout():
     if "user" in session:
         session.pop("user")
     return redirect(url_for("login"))
 
+# create event
 @app.route("/create_event", methods=["GET", "POST"])
 def create_event():
     if not "user" in session:
@@ -87,7 +92,7 @@ def create_event():
         event_time = request.form.get("time")
         event_location = request.form.get("location")
         event_tags = ""
-        event_people = ""
+        event_people = request.form.get("users")
         if not (event_name and event_desc and event_date):
             flash("Name, description, and date are mandatory")
             return redirect(url_for("create_event"))
@@ -109,6 +114,7 @@ def create_event():
 #     lon = json_response["results"][0]["locations"]["latLng"]["lon"]
 #     return (lat, lon)
 
+# get location image using API
 def get_location_image(location):
     req_url = "http://www.mapquestapi.com/geocoding/v1/address?outFormat=json&key=" + MAPQUEST_KEY + "&location=" + urllib.parse.urlencode({"location": location})
     req = urllib.request.Request(req_url)
@@ -116,12 +122,42 @@ def get_location_image(location):
     img_url = json_response["results"][0]["locations"][0]["mapUrl"]
     return img_url
 
+# get user suggestions
 @app.route("/user_suggestions")
 def user_suggestions():
     search = request.args.get("search")
     results = get_users_by_prefix(search)
     json_response = json.dumps(results)
     return json_response
+
+# testing something out
+@app.route("/testing")
+def test():
+    return render_template("test.html")
+
+
+@app.route("/contacts")
+def contacts():
+    c = get_contacts_by_user(session['user'])    
+    return render_template("contacts.html", contact_list = c)
+
+# add contacts
+@app.route("/add_contacts", methods = ["GET", "POST"])
+def add_contacts():
+    if not "user" in session:
+        return redirect(url_for("login"))
+    if request.method == "GET":
+        return render_template("add_contact.html", user = session['user'])
+    else:
+        fname = request.form.get("fname")
+        lname = request.form.get("lname")
+        email = request.form.get("email")
+        username = request.form.get("username")
+        bday = request.form.get("bday")
+        address = request.form.get("address")
+        print (session['user'], fname, lname, email, username, bday, address)
+        add_contact(session['user'], fname, lname, email, username, bday, address)
+        return (redirect("/contacts"))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,53 @@
+{%extends "base.html" %}
+
+{%block content %}
+
+<form class="auth-form" method="POST" action="{{ url_for('add_contacts') }}">
+  <h2>Add Contact</h2>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  <label for="fname-input">First Name: </label>
+  <div class="input-group">
+    <input type="text" class="form-control" id="fname-input" name="fname">
+  </div>
+  
+  <label for="lname-input">Last Name: </label>
+  <div class = "input-group">
+    <input type = "text" class="form-control" id="lname-input" name="lname">
+  </div>
+
+  <label for="email-input">Email: </label>
+  <div class = "input-group">
+    <input type = "text" class="form-control" id="email-input" name="email">
+  </div>
+
+  <label for="username-input">Username (if exists): </label>
+  <div class = "input-group">
+    <input type = "text" class="form-control" id="username-input" name="username">
+  </div>
+
+  <label for="bday-input">Birthday: </label>
+  <div class = "input-group">
+    <input type = "text" class="form-control" id="bday-input" name="bday" placeholder="mm/dd/yyyy">
+  </div>
+
+  <label for="address-input">Address: </label>
+  <div class = "input-group">
+    <input type = "text" class="form-control" id="address-input" name="address">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Add contact</button>
+
+</form>
+
+  <a class="btn btn-primary" href="/contacts" role="button" style = "margin: 10px;">Cancel</a>
+
+{%endblock%}
+

@@ -11,6 +11,8 @@ def create_table():
     c = db.cursor()
     c.execute("CREATE TABLE if not exists users (name TEXT, email TEXT, password TEXT, security_question TEXT, security_answer TEXT)")
     c.execute("CREATE TABLE if not exists events (name TEXT, user TEXT, date TEXT, location TEXT, description TEXT, tags TEXT, people TEXT)")
+    # whose is to indicate whose contact this is, since all contacts for all users are stored in same table
+    c.execute("CREATE TABLE if not exists contacts (whose TEXT, first TEXT, last TEXT, email TEXT, username TEXT, birthday TEXT, address TEXT)")
     db.commit()
     db.close()
 
@@ -71,6 +73,7 @@ def get_events_by_user(email):
     db.close()
     return data
 
+# add event 
 def add_event(user, name, desc, date, location, tags, people):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -89,3 +92,25 @@ def get_users_by_prefix(search):
             results.append({"email": user[1], "name": user[0]})
     db.close()
     return results
+
+# add a contact 
+def add_contact(user, first, last, email, username, bday, address):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    params = (user, first, last, email, username, bday, address)
+    c.execute("INSERT INTO contacts VALUES(?, ?, ?, ?, ?, ?, ?)", params)
+    db.commit()
+    db.close()
+
+# get contacts by user
+def get_contacts_by_user(email):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    users = c.execute("SELECT * FROM contacts WHERE whose = ?", (email,)).fetchall()
+    retL = []
+    for i in users:
+        retL.append({"first": i[1], "last": i[2], "email": i[3], "username": i[4], "bday": i[5], "address": i[6]})
+    #print(retL)
+    return retL
+    db.commit()
+    db.close()
