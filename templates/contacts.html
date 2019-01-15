@@ -18,7 +18,7 @@
 <div style = "margin: 20px;">
 {% for i in contact_list %}
 <b>{{i["first"]}} {{i["last"]}}</b><br>
-Email: {{i["email"]}}<br>
+Email: <a href = "mailto:" + {{i["email"]}} > {{i["email"]}}</a> <br>
 Address: {{i["address"]}}<br><hr>
 {%endfor%}
 </div>
