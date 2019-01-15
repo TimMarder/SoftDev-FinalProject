@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 
-from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user
+from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user, get_users_by_prefix
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -115,6 +115,13 @@ def get_location_image(location):
     json_response = json.loads(urllib.request.urlopen(req).read())
     img_url = json_response["results"][0]["locations"][0]["mapUrl"]
     return img_url
+
+@app.route("/user_suggestions")
+def user_suggestions():
+    search = request.args.get("search")
+    results = get_users_by_prefix(search)
+    json_response = json.dumps(results)
+    return json_response
 
 
 if __name__ == "__main__":

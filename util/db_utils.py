@@ -67,7 +67,7 @@ def add_user(name, email, password, security_question, security_answer):
 def get_events_by_user(email):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    data = c.execute("SELECT * FROM events WHERE user = ? ORDER BY datetime(date) DESC", (email,)).fetchall()
+    data = c.execute("SELECT * FROM events WHERE user = ? ORDER BY datetime(date) ASC", (email,)).fetchall()
     db.close()
     return data
 
@@ -78,3 +78,14 @@ def add_event(user, name, desc, date, location, tags, people):
     c.execute("INSERT INTO events VALUES(?, ?, ?, ?, ?, ?, ?)", params)
     db.commit()
     db.close()
+
+def get_users_by_prefix(search):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    users = c.execute("SELECT name, email FROM users").fetchall()
+    results = []
+    for user in users:
+        if search.lower() == user[0][0:len(search)].lower() or search.lower() == user[1][0:len(search)].lower():
+            results.append({"email": user[1], "name": user[0]})
+    db.close()
+    return results
