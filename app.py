@@ -1,16 +1,30 @@
 from os import urandom
 import urllib, json
 from datetime import datetime
+from flask_mail import Mail, Message
 
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 
-from util.db_utils import *
+from util.db_utils import * 
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
 
 MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
 OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
+
+#email configuration
+app.config.update(dict(
+    DEBUG = True,
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = 587,
+    MAIL_USE_TLS = True,
+    MAIL_USE_SSL = False,
+    MAIL_USERNAME = 'eventcalendar.stuy@gmail.com',
+    MAIL_PASSWORD = 'Eventcalendar!1',
+))
+
+mail = Mail(app)
 
 # login page
 @app.route("/", methods=["GET"])
@@ -104,6 +118,20 @@ def create_event():
             flash("Name, description, and date are mandatory")
             return redirect(url_for("create_event"))
         else:
+            if event_people:
+                emails = event_people.strip(",").strip()
+                emails = emails.split(",")
+                print(emails)
+                msg = Message(subject = "You have been invited to an event on: ",
+                              sender = "eventcalendar.stuy@gmail.com",
+                              #reply_to = session.get("user"),                                                                                                              
+                              recipients = emails)
+                message = session.get("user") +  " has invited you to their event on " + event_month + "/" + event_day + "/" + event_year + "."
+                message += ("\nDescription: " + event_desc)
+                message += ("\nLocation: " + event_location)
+
+                msg.body = message
+                mail.send(msg)
             event_datetime = datetime(int(event_year), int(event_month), int(event_day), int(event_hour), int(event_minute))
             add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
             return redirect(url_for("index"))

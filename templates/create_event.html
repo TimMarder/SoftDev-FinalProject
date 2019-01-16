@@ -35,8 +35,9 @@
                         border-right: 0;
                         ">
                         <option value="" disabled selected>Month</option>
+			{% set months = ["January", "February", "March", "April", "May", "June", "July","August", "September", "October", "November", "December"] %}
                         {% for i in range(1, 13) %}
-                        <option value="{{ '%02d' % i }}">{{ '%02d' % i }}</option>
+                        <option value="{{ '%02d' % i }}">{{ '%02d' % i }}  {{months[i-1]}} </option>
                         {% endfor %}
                     </select>
                     <div class="input-group-prepend" style="
