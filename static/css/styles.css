@@ -34,6 +34,7 @@ body {
     background-color: white;
     margin: 30px;
     box-shadow: 1px 2px 5px 0px lightgray;
+    width:100%
 }
 
 .event-container {
@@ -42,4 +43,18 @@ body {
 
 .dropdown-toggle::after{
     display: none;
+}
+
+.dropdown-toggle {
+    padding-top: 0;
+    text-decoration: none;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.more-actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
