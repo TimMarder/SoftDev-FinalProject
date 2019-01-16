@@ -206,7 +206,7 @@ def edit_event(event_id):
     if request.method == "GET":
         event = get_event_by_id(event_id)
         event_datetime = datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S")
-        form = {"name": event[0], "location": event[2], "description": event[4], "people": event[6], "month": event_datetime.month, "day": event_datetime.day, "year": event_datetime.year, "hour": event_datetime.hour, "minute": event_datetime.minute}
+        form = {"name": event[0], "location": event[3], "description": event[4], "people": event[6], "month": event_datetime.month, "day": event_datetime.day, "year": event_datetime.year, "hour": event_datetime.hour, "minute": event_datetime.minute}
         return render_template("edit_event.html", form=form, id=event_id)
     else:   # request.method == "POST"
         event_name = request.form.get("name")
