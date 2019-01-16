@@ -55,14 +55,28 @@ Added more feedback to user on signup/login pages
 Added page for creating events
 Added more functionality to landing page
 
+claraM 2019-01-14
+Added a contacts page where users can upload their contacts
+created contacts database
+
 jaredA: 2019-01-15
 Added suggestions for adding users to events (autocompletion)
 Application will now automatically clear old events
+
+claraM: 2019-01-15
+Added mailing functionality where event invites are emailed to invited users
+Started working with Holiday API- made decision to change APIs for holidays because Holiday API
+only provides information for past holidays, whereas future holidays were needed.
+Found CalendarIndex API, decided to use this instead.
 
 jaredA: 2019-01-15
 Users can share events between each other
 Invites sent to other users via pending events section on landing page
 Events will show weather forecast for the time of the event
+
+claraM: 2019-01-16
+
+
 
 jaredA: 2019-01-16:
 Events can now be deleted from the landing page
