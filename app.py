@@ -183,7 +183,6 @@ def decline_event(event_id):
         return redirect(url_for("login"))
     remove_from_pending(session.get("user"), event_id)
     return redirect(request.referrer)
-    # clone_event(user, event_id)
 
 @app.route("/accept_event/<int:event_id>")
 def accept_event(event_id):
@@ -192,6 +191,13 @@ def accept_event(event_id):
     remove_from_pending(session.get("user"), event_id)
     clone_event(session.get("user"), event_id)
     return redirect(request.referrer)
+
+@app.route("/delete_event/<int:event_id>")
+def delete_event(event_id):
+    if not "user" in session:
+        return redirect(url_for("login"))
+    delete_event_db(session.get("user"), event_id)
+    return redirect(url_for("index"))
 
 def generate_event_tuple(event):
     return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7], get_location_weather(event[3], event[2]) )

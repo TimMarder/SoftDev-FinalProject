@@ -154,3 +154,11 @@ def clone_event(user, event_id):
     c.execute("INSERT INTO events (name, user, date, location, description, tags, people) VALUES(?, ?, ?, ?, ?, ?, ?)", new_event)
     db.commit()
     db.close()
+
+def delete_event_db(user, event_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    if c.execute("SELECT user FROM events WHERE id = ?", (event_id,)).fetchone()[0] == user:
+        c.execute("DELETE from events WHERE id = ?", (event_id,))
+    db.commit()
+    db.close()
