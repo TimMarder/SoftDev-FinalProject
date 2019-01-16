@@ -55,15 +55,15 @@ $ python app.py
 ### APIs
 
 1. Holiday API
-   - Sign up [here](https://holidayapi.com/) to recieve a key
+   - Sign up [here](https://holidayapi.com/) to receive a key
    - API responds with a dictionary of holidays and their dates
    - We used this API in our calendar
 2. Openstaticmap API
-   - Sign up [here](https://developer.mapquest.com/) to recieve a key
+   - Sign up [here](https://developer.mapquest.com/) to receive a key
    - API shows a map of a chosen area
    - We used this API to display the locations of events
 3. Openweathermap API
-   - Sign up [here](https://openweathermap.org/api) to recieve a key
+   - Sign up [here](https://openweathermap.org/api) to receive a key
    - API tells us the weather for an area by name, coordinates, zip code or city id 
    - We used this API to display the weather at the time and place of the event
 
