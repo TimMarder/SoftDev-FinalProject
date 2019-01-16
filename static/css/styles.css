@@ -39,3 +39,7 @@ body {
 .event-container {
     padding: 20px;
 }
+
+.dropdown-toggle::after{
+    display: none;
+}

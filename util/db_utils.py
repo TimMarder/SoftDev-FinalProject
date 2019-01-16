@@ -162,3 +162,17 @@ def delete_event_db(user, event_id):
         c.execute("DELETE from events WHERE id = ?", (event_id,))
     db.commit()
     db.close()
+
+def get_event_by_id(event_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    event = c.execute("SELECT * FROM events WHERE id = ?", (event_id, )).fetchone()
+    db.close()
+    return event
+
+def update_event(event_id, name, desc, date, location, tags, people):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    c.execute("UPDATE events SET name = ?, date = ?, location = ?, description = ?, tags = ?, people = ? WHERE id = ?", (name, date, location, desc, tags, people, event_id,))
+    db.commit()
+    db.close()

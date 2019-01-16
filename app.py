@@ -199,6 +199,36 @@ def delete_event(event_id):
     delete_event_db(session.get("user"), event_id)
     return redirect(url_for("index"))
 
+@app.route("/edit_event/<int:event_id>", methods=["GET", "POST"])
+def edit_event(event_id):
+    if not "user" in session:
+        return redirect(url_for("login"))
+    if request.method == "GET":
+        event = get_event_by_id(event_id)
+        event_datetime = datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S")
+        form = {"name": event[0], "location": event[2], "description": event[4], "people": event[6], "month": event_datetime.month, "day": event_datetime.day, "year": event_datetime.year, "hour": event_datetime.hour, "minute": event_datetime.minute}
+        return render_template("edit_event.html", form=form, id=event_id)
+    else:   # request.method == "POST"
+        event_name = request.form.get("name")
+        event_desc = request.form.get("description")
+
+        event_day = request.form.get("day")
+        event_month = request.form.get("month")
+        event_year = request.form.get("year")
+        event_hour = request.form.get("hour")
+        event_minute = request.form.get("minute")
+
+        event_location = request.form.get("location")
+        event_tags = ""
+        event_people = request.form.get("users")
+        if not (event_name and event_desc and event_year and event_month and event_day and event_hour and event_minute):
+            flash("Name, description, and date are mandatory")
+            return redirect(request.referrer)
+        else:
+            event_datetime = datetime(int(event_year), int(event_month), int(event_day), int(event_hour), int(event_minute))
+            update_event(event_id, event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
+            return redirect(url_for("index"))
+
 def generate_event_tuple(event):
     return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7], get_location_weather(event[3], event[2]) )
 

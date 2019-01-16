@@ -2,6 +2,10 @@
 
 {% block content %}
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <div class = "row">
         <div class = "col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
         <div class = "col-lg-10 col-md-10 col-sm-10 col-xs-10">
@@ -26,10 +30,30 @@
                 <div class = "row event-row">
                     <img class = "location-img" style="max-width:100%; max-height:100%;" src = "{{ event[1] }}"/>
                     <div class = "event-container">
-                        <h2 style = "display: inline-block;"> {{ event[0][0] }} <a style = "color: crimson; text-decoration: none;" href = "{{ url_for('delete_event', event_id = event[3]) }}">&times;</a> </h2>
+                        <!-- <div class="dropdown">
+                            <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown trigger
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dLabel">
+                                <a style = "text-decoration: none;" href = "{{ url_for('edit_event', event_id = event[3]) }}">Edit Event</a>
+                                <a style = "text-decoration: none;" href = "{{ url_for('delete_event', event_id = event[3]) }}">Remove Event</a>
+                            </div>
+                        </div> -->
+                        <div class="dropdown">
+                            <h2 style = "display: inline-block;"> {{ event[0][0] }} </h2>
+                            <button type="button" class="btn btn-link dropdown-toggle" style = "padding-top: 0; text-decoration: none;" data-toggle="dropdown"><h2>&#8942</h2></button>
+                            <p> {{ event[2] }} </p>
+                            <p> {{ event[0][3] }}</p>
+                            <p> {{ event[4] | safe }}</p>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{ url_for('edit_event', event_id = event[3]) }}">Edit Event</a>
+                                <a class="dropdown-item" href="{{ url_for('delete_event', event_id = event[3]) }}">Remove Event</a>
+                            </div>
+                        </div>
+                        <!-- <h2 style = "display: inline-block;"> {{ event[0][0] }} </h2>
                         <p> {{ event[2] }} </p>
                         <p> {{ event[0][3] }}</p>
-                        <p> {{ event[4] | safe }}</p>
+                        <p> {{ event[4] | safe }}</p> -->
                     </div>
                 </div>
             {% endfor %}
