@@ -14,6 +14,7 @@
                         <h2 style = "display: inline-block;"> {{ event[0][0] }} </h2>
                         <p> {{ event[2] }}</p>
                         <p> {{ event[0][3] }}</p>
+                        <p> {{ event[4] | safe }}</p>
                     </div>
                 </div>
             {% endfor %}

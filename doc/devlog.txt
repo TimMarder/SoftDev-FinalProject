@@ -62,3 +62,4 @@ Application will now automatically clear old events
 jaredA: 2019-01-15
 Users can share events between each other
 Invites sent to other users via pending events section on landing page
+Events will show weather forecast for the time of the event

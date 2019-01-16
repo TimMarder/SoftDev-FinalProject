@@ -10,6 +10,7 @@ app = Flask(__name__)
 app.secret_key = urandom(32)
 
 MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
+OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
 
 # login page
 @app.route("/", methods=["GET"])
@@ -107,13 +108,14 @@ def create_event():
             add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
             return redirect(url_for("index"))
 
+
 def process_location(location):
     req_url = "http://www.mapquestapi.com/geocoding/v1/address?outFormat=json&key=" + MAPQUEST_KEY + "&location=" + urllib.parse.urlencode({"location": location})
     req = urllib.request.Request(req_url)
     json_response = json.loads(urllib.request.urlopen(req).read())
-    lat = json_response["results"][0]["locations"]["latLng"]["lat"]
-    lon = json_response["results"][0]["locations"]["latLng"]["lon"]
-    return (lat, lon)
+    lat = json_response["results"][0]["locations"][0]["latLng"]["lat"]
+    lng = json_response["results"][0]["locations"][0]["latLng"]["lng"]
+    return (lat, lng)
 
 # get location image using API
 def get_location_image(location):
@@ -123,10 +125,16 @@ def get_location_image(location):
     img_url = json_response["results"][0]["locations"][0]["mapUrl"]
     return img_url
 
-def get_location_weather(location, date):
-    lat, lon = process_location(location)
-    req_url = "http://api.openweathermap.org/data/2.5/forecast?lat=" + str(lat) + "&lon=" + str(lon)
-    json_response = json.loads(urllib.request.urlopen(req).read())
+def get_location_weather(location, dt):
+    date = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+    lat, lng = process_location(location)
+    req_url = "http://api.openweathermap.org/data/2.5/forecast?lat=" + str(lat) + "&lon=" + str(lng) + "&appid=" + OPEN_WEATHER_MAP_KEY
+    req = urllib.request.Request(req_url)
+    datapoints = json.loads(urllib.request.urlopen(req).read())["list"]
+    for datapoint in datapoints:
+        if(datapoint["dt"] > date.timestamp()):
+            return "%02d&deg; F outside, %s" % (kelvin_to_farenheight(datapoint["main"]["temp"]), datapoint["weather"][0]["description"])
+    return "Forecast not yet available"
 
 
 # get user suggestions
@@ -186,7 +194,10 @@ def accept_event(event_id):
     return redirect(request.referrer)
 
 def generate_event_tuple(event):
-    return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7] )
+    return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7], get_location_weather(event[3], event[2]) )
+
+def kelvin_to_farenheight(k):
+    return (k - 273.15) * 1.8 + 32
 
 if __name__ == "__main__":
     create_table() # Only creates a table if it doesn't already exist
