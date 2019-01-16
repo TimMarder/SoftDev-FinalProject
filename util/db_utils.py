@@ -10,7 +10,7 @@ def create_table():
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     c.execute("CREATE TABLE if not exists users (name TEXT, email TEXT, password TEXT, security_question TEXT, security_answer TEXT)")
-    c.execute("CREATE TABLE if not exists events (name TEXT, user TEXT, date TEXT, location TEXT, description TEXT, tags TEXT, people TEXT)")
+    c.execute("CREATE TABLE if not exists events (name TEXT, user TEXT, date TEXT, location TEXT, description TEXT, tags TEXT, people TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT)")
     # whose is to indicate whose contact this is, since all contacts for all users are stored in same table
     c.execute("CREATE TABLE if not exists contacts (whose TEXT, first TEXT, last TEXT, email TEXT, birthday TEXT, address TEXT)")
     db.commit()
@@ -78,14 +78,14 @@ def clear_old_events(email):
     c = db.cursor()
     c.execute("DELETE FROM events WHERE date < datetime('now')")
     db.commit()
-    db.close() 
+    db.close()
 
 # add event
 def add_event(user, name, desc, date, location, tags, people):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     params = (name, user, date, location, desc, tags, people)
-    c.execute("INSERT INTO events VALUES(?, ?, ?, ?, ?, ?, ?)", params)
+    c.execute("INSERT INTO events (name, user, date, location, description, tags, people) VALUES(?, ?, ?, ?, ?, ?, ?)", params)
     db.commit()
     db.close()
 
@@ -119,5 +119,38 @@ def get_contacts_by_user(email):
         retL.append({"first": i[1], "last": i[2], "email": i[3], "bday": i[4], "address": i[5]})
     #print(retL)
     return retL
+    db.commit()
+    db.close()
+
+def remove_from_pending(user, event_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    people_list = c.execute("SELECT people FROM events WHERE id = ?", (event_id,)).fetchone()[0].split(",")
+    print(people_list)
+    people_list.remove(user)
+    people_list = ",".join(people_list)
+    c.execute("UPDATE events SET people = ? WHERE id = ?", (people_list, event_id,))
+    db.commit()
+    db.close()
+
+def get_pending_events(user):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    event_list = c.execute("SELECT * FROM events ORDER BY datetime(date) ASC").fetchall()
+    results = []
+    for event in event_list:
+        people = event[6].split(",")
+        for u in people:
+            if user == u.strip():
+                results.append(event)
+    db.close()
+    return results
+
+def clone_event(user, event_id):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    event = c.execute("SELECT * FROM events WHERE id = ?", (event_id,)).fetchone()
+    new_event = (event[0], user, event[2], event[3], event[4], event[5], event[6])
+    c.execute("INSERT INTO events (name, user, date, location, description, tags, people) VALUES(?, ?, ?, ?, ?, ?, ?)", new_event)
     db.commit()
     db.close()

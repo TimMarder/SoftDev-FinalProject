@@ -7,114 +7,162 @@
         <form class="auth-form" method="POST" action="{{ url_for('create_event') }}">
             <h2>Create Event</h2>
             {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
             {% endwith %}
-                <label for="name-input">Name: </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="name-input" name="name">
+            <label for="name-input">Name: </label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="name-input" name="name">
+            </div>
+            <label for="description-input">Description: </label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="description-input" name="description">
+            </div>
+            <h5>Event Information</h5>
+            <label for="location-input">Location: </label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="location-input" name="location">
+            </div>
+            <label for="date-input">Date: </label>
+            <div class="input-group">
+                <div class="input-group mb-3">
+                    <select name = "month" class="custom-select" id="inputGroupSelect01" style="
+                        border-right: 0;
+                        ">
+                        <option value="" disabled selected>Month</option>
+                        {% for i in range(1, 13) %}
+                        <option value="{{ '%02d' % i }}">{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="input-group-prepend" style="
+                        border: none;
+                        ">
+                        <span class="input-group-text" id="" style="
+                            background-color: white;
+                            border-width: 1px 0;
+                            ">/</span>
+                    </div>
+                    <select name = "day" class="custom-select" id="inputGroupSelect02" style="
+                        border-right-width: 0;
+                        border-left-width: 0;
+                        ">
+                        <option value="" disabled selected>Day</option>
+                        {% for i in range(1, 32) %}
+                        <option value="{{ '%02d' % i }}">{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="" style="
+                            background-color: white;
+                            border-right-width: 0;
+                            border-left-width: 0;
+                            ">/</span>
+                    </div>
+                    <select name = "year" class="custom-select" id="inputGroupSelect03" style="
+                        border-left-width: 0;
+                        ">
+                        <option value="" disabled selected>Year</option>
+                        {% for i in range(2018, 2028) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-
-                <label for="description-input">Description: </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="description-input" name="description">
+            </div>
+            <label for="time-input">Time: </label>
+            <div class="input-group">
+                <div class="input-group mb-3">
+                    <select name = "hour" class="custom-select" id="inputGroupSelect03" style="border-right-width: 0;">
+                        <option value="" disabled selected>Hour</option>
+                        {% for i in range(0, 24) %}
+                            <option value="{{ '%02d' % i }}">{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="" style="border-right-width: 0;border-left-width: 0;">:</span>
+                    </div>
+                    <select name = "minute" class="custom-select" id="inputGroupSelect03" style="border-left-width: 0;">
+                        <option value="" disabled selected>Minute</option>
+                        {% for i in range(0, 60) %}
+                        <option value="{{ '%02d' % i }}">{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-
-                <h5>Event Information</h5>
-                <label for="location-input">Location: </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="location-input" name="location">
-                </div>
-
-                <label for="date-input">Date: </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="date-input" name="date" placeholder="mm/dd/yyyy">
-                </div>
-
-                <label for="time-input">Time: </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="time-input" name="time" placeholder="hh:mm">
-                </div>
-
-                <label for="users-input">Other Users: </label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="users-input" name="users" placeholder="List user emails, separated by spaces">
-                    <ul class="list-group suggestion-dropdown" id = "users-dropdown" style="display:none;">
-                    </ul>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Create Event</button>
-            </form>
-        </div>
-        <div class = "col-lg-2 col-md-2 col-sm-1 col-xs-1"></div>
+            </div>
+            <label for="users-input">Other Users: </label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="users-input" name="users" placeholder="List user emails, separated by spaces">
+                <ul class="list-group suggestion-dropdown" id = "users-dropdown" style="display:none;">
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Event</button>
+        </form>
+    </div>
+    <div class = "col-lg-2 col-md-2 col-sm-1 col-xs-1"></div>
 </div>
+<script type = "text/javascript">
+    userInput = document.getElementById("users-input");
+    userDropdown = document.getElementById("users-dropdown");
 
+    userInput.addEventListener("input", function(e){
+        console.log(e)
+        var xmlhttp = new XMLHttpRequest();
 
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                if (xmlhttp.status == 200) {
+                    res = JSON.parse(xmlhttp.responseText);
 
-    <script type = "text/javascript">
-        userInput = document.getElementById("users-input");
-        userDropdown = document.getElementById("users-dropdown");
-
-        userInput.addEventListener("input", function(e){
-            console.log(e)
-            var xmlhttp = new XMLHttpRequest();
-
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
-                    if (xmlhttp.status == 200) {
-                        res = JSON.parse(xmlhttp.responseText);
-
-                        while( userDropdown.firstChild ){
-                            userDropdown.removeChild( userDropdown.firstChild );
-                        }
-
-                        for(let i = 0; i < res.length; i++){
-                            let newLi = document.createElement("li");
-                            newLi.classList.add("list-group-item");
-                            newLi.innerHTML = res[i].first + " " + res[i].last + " - " + res[i].email;
-
-                            userDropdown.appendChild(newLi);
-                            newLi.addEventListener("mouseover", function(e){
-                                this.classList.add("active");
-                            });
-
-                            newLi.addEventListener("mouseleave", function(e){
-                                this.classList.remove("active");
-                            });
-
-                            newLi.addEventListener("mousedown", function(e){
-                                userList = userInput.value.split(", ")
-                                userList[userList.length - 1] = e.target.innerHTML.split("-")[1]
-                                userInput.value = userList.join(", ") + ", ";
-                            });
-                        }
+                    while( userDropdown.firstChild ){
+                        userDropdown.removeChild( userDropdown.firstChild );
                     }
-                    else if (xmlhttp.status == 400) {
-                        alert('There was an error 400');
-                    }
-                    else {
-                        alert('something else other than 200 was returned');
+
+                    for(let i = 0; i < res.length; i++){
+                        let newLi = document.createElement("li");
+                        newLi.classList.add("list-group-item");
+                        newLi.innerHTML = res[i].first + " " + res[i].last + " - " + res[i].email;
+
+                        userDropdown.appendChild(newLi);
+                        newLi.addEventListener("mouseover", function(e){
+                            this.classList.add("active");
+                        });
+
+                        newLi.addEventListener("mouseleave", function(e){
+                            this.classList.remove("active");
+                        });
+
+                        newLi.addEventListener("mousedown", function(e){
+                            userList = userInput.value.split(",")
+                            userList[userList.length - 1] = e.target.innerHTML.split("-")[1]
+                            userInput.value = userList.join(",") + ",";
+                        });
                     }
                 }
+                else if (xmlhttp.status == 400) {
+                    alert('There was an error 400');
+                }
+                else {
+                    alert('something else other than 200 was returned');
+                }
             }
+        }
 
-            url = "/user_suggestions?search=" + encodeURI(e.target.value.split(", ").pop());
-            xmlhttp.open("GET", url, true);
-            xmlhttp.send();
-        })
+        url = "/user_suggestions?search=" + encodeURI(e.target.value.split(", ").pop());
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    })
 
-        userInput.addEventListener("focus", function(e){
-            userDropdown.style.display = "block";
-        });
+    userInput.addEventListener("focus", function(e){
+        userDropdown.style.display = "block";
+    });
 
-        userInput.addEventListener("blur", function(e){
-            userDropdown.style.display = "none";
-        })
+    userInput.addEventListener("blur", function(e){
+        userDropdown.style.display = "none";
+    })
 
-    </script>
+</script>
 {% endblock %}

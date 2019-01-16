@@ -58,3 +58,7 @@ Added more functionality to landing page
 jaredA: 2019-01-15
 Added suggestions for adding users to events (autocompletion)
 Application will now automatically clear old events
+
+jaredA: 2019-01-15
+Users can share events between each other
+Invites sent to other users via pending events section on landing page

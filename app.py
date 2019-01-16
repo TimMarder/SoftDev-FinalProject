@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 
-from util.db_utils import validate_user, create_table, get_user_by_email, add_user, add_event, get_events_by_user, get_contacts_by_prefix, add_contact, get_contacts_by_user, clear_old_events
+from util.db_utils import *
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -17,9 +17,9 @@ def index():
     if "user" in session:
         events = get_events_by_user(session.get("user"))
         clear_old_events(session.get("user"))
-        eventlist = [(event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p") ) for event in events]
-        print(events)
-        return render_template("landing.html", user = session['user'], eventlist = eventlist )
+        eventlist = [generate_event_tuple(event) for event in events]
+        pendinglist = [generate_event_tuple(event) for event in get_pending_events(session.get("user"))]
+        return render_template("landing.html", user = session['user'], eventlist = eventlist, pendinglist = pendinglist )
     return redirect(url_for("login"))
 
 # authenticate
@@ -89,22 +89,22 @@ def create_event():
     else:
         event_name = request.form.get("name")
         event_desc = request.form.get("description")
-        event_date = request.form.get("date")
-        event_time = request.form.get("time")
+
+        event_day = request.form.get("day")
+        event_month = request.form.get("month")
+        event_year = request.form.get("year")
+        event_hour = request.form.get("hour")
+        event_minute = request.form.get("minute")
+
         event_location = request.form.get("location")
         event_tags = ""
         event_people = request.form.get("users")
-        if not (event_name and event_desc and event_date):
+        if not (event_name and event_desc and event_year and event_month and event_day and event_hour and event_minute):
             flash("Name, description, and date are mandatory")
             return redirect(url_for("create_event"))
         else:
-            event_datetime = event_date + " - " + (event_time if event_time != " " else "12:00")
-            try:
-                event_datetime = datetime.strptime(event_datetime, "%m/%d/%Y - %H:%M")
-            except:
-                flash("There was an issue with the date/time entered")
-                return redirect(url_for("create_event"))
-            add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people)
+            event_datetime = datetime(int(event_year), int(event_month), int(event_day), int(event_hour), int(event_minute))
+            add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
             return redirect(url_for("index"))
 
 def process_location(location):
@@ -169,6 +169,24 @@ def add_contacts():
         add_contact(session['user'], fname, lname, email, bday, address)
         return (redirect("/contacts"))
 
+@app.route("/decline_event/<int:event_id>")
+def decline_event(event_id):
+    if not "user" in session:
+        return redirect(url_for("login"))
+    remove_from_pending(session.get("user"), event_id)
+    return redirect(request.referrer)
+    # clone_event(user, event_id)
+
+@app.route("/accept_event/<int:event_id>")
+def accept_event(event_id):
+    if not "user" in session:
+        return redirect(url_for("login"))
+    remove_from_pending(session.get("user"), event_id)
+    clone_event(session.get("user"), event_id)
+    return redirect(request.referrer)
+
+def generate_event_tuple(event):
+    return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7] )
 
 if __name__ == "__main__":
     create_table() # Only creates a table if it doesn't already exist
