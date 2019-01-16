@@ -26,7 +26,12 @@
             {% endif %}
             <h1 style = "margin: 20px;">My Upcoming Events</h1>
             <h2 style = "margin: 20px"><a href = "{{ url_for('create_event') }}"> Create an Event </a></h2>
-            {% for event in eventlist %}
+
+	    <br>
+
+	    
+
+	    {% for event in eventlist %}
                 <div class = "row event-row dropdown">
                     <img class = "location-img" style="max-width:100%; max-height:100%;" src = "{{ event[1] }}"/>
                     <div class = "event-container">

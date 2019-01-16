@@ -12,6 +12,9 @@ app.secret_key = urandom(32)
 
 MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
 OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
+HOLIDAY_STUB = "https://www.calendarindex.com/api/v1/holidays?country=US&year=2019&api_key="
+HOLIDAY_KEY = "4ee45cd4aaa1b5179955938e84952c270cfb8563"
+HOLIDAY_URL = HOLIDAY_STUB + HOLIDAY_KEY
 
 #email configuration
 app.config.update(dict(
@@ -34,8 +37,16 @@ def index():
         clear_old_events(session.get("user"))
         eventlist = [generate_event_tuple(event) for event in events]
         pendinglist = [generate_event_tuple(event) for event in get_pending_events(session.get("user"))]
-        return render_template("landing.html", user = session['user'], eventlist = eventlist, pendinglist = pendinglist )
+        return render_template("landing.html", user = session['user'], eventlist = eventlist, pendinglist = pendinglist)
     return redirect(url_for("login"))
+
+# get holidays using CalendarIndex API
+def get_holidays():
+    req = urllib.request.Request(HOLIDAY_URL, headers = {"User-agent": "curl/7.43.0"})
+    data = json.loads(urllib.request.urlopen(req).read())
+    print(data['response']['holidays'])
+    holidays = data['response']['holidays']    
+    return data['response']['holidays']
 
 # authenticate
 @app.route("/login", methods=["GET", "POST"])
@@ -264,6 +275,6 @@ def kelvin_to_farenheight(k):
     return (k - 273.15) * 1.8 + 32
 
 if __name__ == "__main__":
-    create_table() # Only creates a table if it doesn't already exist
+    create_table(get_holidays()) # Only creates a table if it doesn't already exist
     app.debug = True;
     app.run()
