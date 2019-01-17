@@ -81,3 +81,4 @@ claraM: 2019-01-16
 jaredA: 2019-01-16:
 Events can now be deleted from the landing page
 Events can now be edited from the landing page
+Made front-end a lot faster by loading images and weather forecasts asynchronously

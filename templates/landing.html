@@ -13,15 +13,60 @@
             <h1 style = "margin: 20px;">Pending Event Invites</h1>
             {% for event in pendinglist %}
                 <div class = "row event-row">
-                    <img class = "location-img" style="max-width:100%; max-height:100%;" src = "{{ event[1] }}"/>
-                    <div class = "event-container">
-                        <h2 style = "display: inline-block;"> {{ event[0][0] }} </h2>
-                        <p> {{ event[2] }}</p>
-                        <p> {{ event[0][3] }}</p>
-                        <a href = "{{ url_for('accept_event', event_id = event[3]) }}" style = "margin-right: 20px; color: seagreen;">Accept</a>
-                        <a href = "{{ url_for('decline_event', event_id = event[3]) }}" style = "color: crimson;">Decline</a>
+                    <div class = "col-lg-3 col-md-3 col-sm-3 col-xs-3" id = "img-{{ event.get("id") }}" style="background-image: url(http://art-en-provence.com/wp-content/uploads/2018/07/Maps-Of-Usa-Google-United-States-Satellite-Diagram-Get-With-Boston-At-Contemporary-Art-Sites-California-Usa-Map-Google.jpg); background-position: center; background-size: cover;"></div>
+                    <div class = "col-lg-9 col-md-9 col-sm-9 col-xs-9 event-container">
+                        <h2 style = "display: inline-block;"> {{ event.get("name") }} </h2>
+                        <p>{{ event.get("date") }} - {{ event.get("desc") }}</p>
+                        {% if event.get("location") == "" %}
+                            <p>No Location</p>
+                        {% else %}
+                            <p> {{ event.get("location") }}</p>
+                        {% endif %}
+                        <p> {{ event.get("date") }}</p>
+                        <p id = "weather-{{ event.get('id') }}"> Weather forecast loading... </p>
+                        <a href = "{{ url_for('accept_event', event_id = event.get('id')) }}" style = "margin-right: 20px; color: seagreen;">Accept</a>
+                        <a href = "{{ url_for('decline_event', event_id = event.get('id')) }}" style = "color: crimson;">Decline</a>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    if("{{ event.get('location') }}" != ""){
+                    var xmlhttp_image_{{ event.get("id") }} = new XMLHttpRequest();
+
+                    xmlhttp_image_{{ event.get("id") }}.onreadystatechange = function() {
+                        if (xmlhttp_image_{{ event.get("id") }}.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                            if (xmlhttp_image_{{ event.get("id") }}.status == 200) {
+                                var x = document.getElementById("img-{{ event.get("id") }}");
+                                x.style.backgroundImage = "url('" + xmlhttp_image_{{ event.get("id") }}.responseText + "')"
+                            }
+                            else if (xmlhttp_image_{{ event.get("id") }}.status == 400) {
+                                alert('There was an error 400');
+                            }
+                            else {
+                                alert('something else other than 200 was returned');
+                            }
+                        }
+                    }
+
+                    url = "{{ url_for('event_location_image', event_id=event.get("id")) }}"
+                    xmlhttp_image_{{ event.get("id") }}.open("GET", url, true);
+                    xmlhttp_image_{{ event.get("id") }}.send();
+
+                    var xmlhttp_weather_{{ event.get("id") }} = new XMLHttpRequest();
+
+                    xmlhttp_weather_{{ event.get("id") }}.onreadystatechange = function() {
+                        if (xmlhttp_weather_{{ event.get("id") }}.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                            if (xmlhttp_weather_{{ event.get("id") }}.status == 200) {
+                                var x = document.getElementById("weather-{{ event.get('id') }}");
+                                x.innerHTML = xmlhttp_weather_{{ event.get("id") }}.responseText;
+                            }
+                        }
+                    }
+
+                    url = "{{ url_for('forecast', event_id=event.get('id')) }}"
+                    xmlhttp_weather_{{ event.get("id") }}.open("GET", url, true);
+                    xmlhttp_weather_{{ event.get("id") }}.send();
+                }
+                </script>
             {% endfor %}
             {% endif %}
             <h1 style = "margin: 20px;">My Upcoming Events</h1>
@@ -29,25 +74,64 @@
 
 	    <br>
 
-	    
+
 
 	    {% for event in eventlist %}
                 <div class = "row event-row dropdown">
-                    <img class = "location-img" style="max-width:100%; max-height:100%;" src = "{{ event[1] }}"/>
-                    <div class = "event-container">
+                    <div class = "col-lg-3 col-md-3 col-sm-3 col-xs-3" id = "img-{{ event.get("id") }}" style="background-image: url(http://art-en-provence.com/wp-content/uploads/2018/07/Maps-Of-Usa-Google-United-States-Satellite-Diagram-Get-With-Boston-At-Contemporary-Art-Sites-California-Usa-Map-Google.jpg); background-position: center; background-size: cover;"></div>
+                    <div class = "col-lg-9 col-md-9 col-sm-9 col-xs-9 event-container">
                         <div class="dropdown">
-                            <h2 style = "display: inline-block;"> {{ event[0][0] }} </h2>
-                            <p> {{ event[2] }} </p>
-                            <p> {{ event[0][3] }}</p>
-                            <p> {{ event[4] | safe }}</p>
+                            <h2 style = "display: inline-block;"> {{ event.get("name") }} </h2>
+                            <p>{{ event.get("date") }} - {{ event.get("desc") }}</p>
+                            {% if event.get("location") == "" %}
+                                <p>No Location</p>
+                            {% else %}
+                                <p> {{ event.get("location") }}</p>
+                                <p id = "weather-{{ event.get('id') }}"> Weather forecast loading... </p>
+                            {% endif %}
                         </div>
                     </div>
 
                     <button type="button" class="btn btn-link dropdown-toggle" style = "padding-top: 0; text-decoration: none;" data-toggle="dropdown"><h2>&#8942</h2></button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ url_for('edit_event', event_id = event[3]) }}">Edit Event</a>
-                        <a class="dropdown-item" href="{{ url_for('delete_event', event_id = event[3]) }}">Remove Event</a>
+                        <a class="dropdown-item" href="{{ url_for('edit_event', event_id = event.get("id")) }}">Edit Event</a>
+                        <a class="dropdown-item" href="{{ url_for('delete_event', event_id = event.get("id")) }}">Remove Event</a>
                     </div>
+
+                    <script type="text/javascript">
+                        if("{{ event.get('location') }}" != ""){
+                        var xmlhttp_image_{{ event.get("id") }} = new XMLHttpRequest();
+
+                        xmlhttp_image_{{ event.get("id") }}.onreadystatechange = function() {
+                            if (xmlhttp_image_{{ event.get("id") }}.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                                if (xmlhttp_image_{{ event.get("id") }}.status == 200) {
+                                    var x = document.getElementById("img-{{ event.get("id") }}");
+                                    x.style.backgroundImage = "url('" + xmlhttp_image_{{ event.get("id") }}.responseText + "')"
+                                }
+                            }
+                        }
+
+                        url = "{{ url_for('event_location_image', event_id=event.get("id")) }}"
+                        xmlhttp_image_{{ event.get("id") }}.open("GET", url, true);
+                        xmlhttp_image_{{ event.get("id") }}.send();
+
+                        var xmlhttp_weather_{{ event.get("id") }} = new XMLHttpRequest();
+
+                        xmlhttp_weather_{{ event.get("id") }}.onreadystatechange = function() {
+                            if (xmlhttp_weather_{{ event.get("id") }}.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                                if (xmlhttp_weather_{{ event.get("id") }}.status == 200) {
+                                    var x = document.getElementById("weather-{{ event.get("id") }}");
+                                    x.innerHTML = xmlhttp_weather_{{ event.get("id") }}.responseText;
+                                }
+                            }
+                        }
+
+                        url = "{{ url_for('forecast', event_id=event.get("id")) }}"
+                        console.log(url)
+                        xmlhttp_weather_{{ event.get("id") }}.open("GET", url, true);
+                        xmlhttp_weather_{{ event.get("id") }}.send()
+                    }
+                    </script>
                 </div>
             {% endfor %}
         </div>

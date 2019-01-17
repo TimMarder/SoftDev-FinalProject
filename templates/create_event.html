@@ -96,7 +96,7 @@
             </div>
             <label for="users-input">Other Users: </label>
             <div class="input-group">
-                <input type="text" class="form-control" id="users-input" name="users" placeholder="List user emails, separated by spaces">
+                <input type="text" autocomplete = "off" class="form-control" id="users-input" name="users" placeholder="List user emails, separated by spaces">
                 <ul class="list-group suggestion-dropdown" id = "users-dropdown" style="display:none;">
                 </ul>
             </div>
@@ -142,12 +142,6 @@
                             userInput.value = userList.join(",") + ",";
                         });
                     }
-                }
-                else if (xmlhttp.status == 400) {
-                    alert('There was an error 400');
-                }
-                else {
-                    alert('something else other than 200 was returned');
                 }
             }
         }

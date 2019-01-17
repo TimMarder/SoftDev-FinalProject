@@ -5,7 +5,7 @@ from flask_mail import Mail, Message
 
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 
-from util.db_utils import * 
+from util.db_utils import *
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -33,8 +33,8 @@ mail = Mail(app)
 @app.route("/", methods=["GET"])
 def index():
     if "user" in session:
-        events = get_events_by_user(session.get("user"))
         clear_old_events(session.get("user"))
+        events = get_events_by_user(session.get("user"))
         eventlist = [generate_event_tuple(event) for event in events]
         pendinglist = [generate_event_tuple(event) for event in get_pending_events(session.get("user"))]
         return render_template("landing.html", user = session['user'], eventlist = eventlist, pendinglist = pendinglist)
@@ -44,8 +44,7 @@ def index():
 def get_holidays():
     req = urllib.request.Request(HOLIDAY_URL, headers = {"User-agent": "curl/7.43.0"})
     data = json.loads(urllib.request.urlopen(req).read())
-    print(data['response']['holidays'])
-    holidays = data['response']['holidays']    
+    holidays = data['response']['holidays']
     return data['response']['holidays']
 
 # authenticate
@@ -132,10 +131,9 @@ def create_event():
             if event_people:
                 emails = event_people.strip(",").strip()
                 emails = emails.split(",")
-                print(emails)
                 msg = Message(subject = "You have been invited to an event on: ",
                               sender = "eventcalendar.stuy@gmail.com",
-                              #reply_to = session.get("user"),                                                                                                              
+                              #reply_to = session.get("user"),
                               recipients = emails)
                 message = session.get("user") +  " has invited you to their event on " + event_month + "/" + event_day + "/" + event_year + "."
                 message += ("\nDescription: " + event_desc)
@@ -149,6 +147,8 @@ def create_event():
 
 
 def process_location(location):
+    if location == "":
+        return (None, None)
     req_url = "http://www.mapquestapi.com/geocoding/v1/address?outFormat=json&key=" + MAPQUEST_KEY + "&location=" + urllib.parse.urlencode({"location": location})
     req = urllib.request.Request(req_url)
     json_response = json.loads(urllib.request.urlopen(req).read())
@@ -167,6 +167,8 @@ def get_location_image(location):
 def get_location_weather(location, dt):
     date = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
     lat, lng = process_location(location)
+    if lat == None and lng == None:
+        return "Forecast not available"
     req_url = "http://api.openweathermap.org/data/2.5/forecast?lat=" + str(lat) + "&lon=" + str(lng) + "&appid=" + OPEN_WEATHER_MAP_KEY
     req = urllib.request.Request(req_url)
     datapoints = json.loads(urllib.request.urlopen(req).read())["list"]
@@ -212,7 +214,6 @@ def add_contacts():
         email = request.form.get("email")
         bday = request.form.get("bday")
         address = request.form.get("address")
-        print (session['user'], fname, lname, email, bday, address)
         add_contact(session['user'], fname, lname, email, bday, address)
         return (redirect("/contacts"))
 
@@ -265,11 +266,26 @@ def edit_event(event_id):
             return redirect(request.referrer)
         else:
             event_datetime = datetime(int(event_year), int(event_month), int(event_day), int(event_hour), int(event_minute))
-            update_event(event_id, event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
+            update_event(session.get("user"), event_id, event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
             return redirect(url_for("index"))
 
+@app.route("/event_location_image/<int:event_id>")
+def event_location_image(event_id):
+    event = get_event_by_id(event_id)
+    return get_location_image(event[3])
+
+@app.route("/forecast/<int:event_id>")
+def forecast(event_id):
+    print("YES")
+    event = get_event_by_id(event_id)
+    return get_location_weather(event[3], event[2])
+
+# def generate_event_tuple(event):
+#     return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7], get_location_weather(event[3], event[2]) )
+
 def generate_event_tuple(event):
-    return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7], get_location_weather(event[3], event[2]) )
+    date_str = datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d, %Y at %I:%M%p")
+    return {"id": event[7], "name": event[0], "desc": event[4], "date": date_str, "location": event[3]}
 
 def kelvin_to_farenheight(k):
     return (k - 273.15) * 1.8 + 32

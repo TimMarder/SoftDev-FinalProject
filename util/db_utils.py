@@ -6,17 +6,20 @@ from passlib.hash import md5_crypt
 DB_FILE = "app.db"
 
 # create table called users
-def create_table(holiday_info):
+def create_table(holidays):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     c.execute("CREATE TABLE if not exists users (name TEXT, email TEXT, password TEXT, security_question TEXT, security_answer TEXT)")
     c.execute("CREATE TABLE if not exists events (name TEXT, user TEXT, date TEXT, location TEXT, description TEXT, tags TEXT, people TEXT, id INTEGER PRIMARY KEY AUTOINCREMENT)")
     # whose is to indicate whose contact this is, since all contacts for all users are stored in same table
     c.execute("CREATE TABLE if not exists contacts (whose TEXT, first TEXT, last TEXT, email TEXT, birthday TEXT, address TEXT)")
-    for i in holiday_info:
+
+    for i in holidays:
         exists = c.execute('select * from events where date = ?', ( i["date"],)).fetchall()
         params = (i["name"], "", i["date"], "", "Holiday", "Holiday", "")
-        c.execute('INSERT INTO events (name, user, date, location, description, tags, people) VALUES(?, ?, ?, ?, ?, ?, ?)', params)        
+        if len(exists) == 0:
+            c.execute('INSERT INTO events (name, user, date, location, description, tags, people) VALUES(?, ?, ?, ?, ?, ?, ?)', params)
+
     db.commit()
     db.close()
 
@@ -73,7 +76,7 @@ def add_user(name, email, password, security_question, security_answer):
 def get_events_by_user(email):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    data = c.execute('SELECT * FROM events WHERE user = ? or user = "" ORDER BY datetime(date) ASC', (email,)).fetchall()
+    data = c.execute('SELECT * FROM events WHERE user = "" OR user = ? ORDER BY datetime(date) ASC', (email,)).fetchall()
     db.close()
     return data
 
@@ -174,9 +177,10 @@ def get_event_by_id(event_id):
     db.close()
     return event
 
-def update_event(event_id, name, desc, date, location, tags, people):
+def update_event(user, event_id, name, desc, date, location, tags, people):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    c.execute("UPDATE events SET name = ?, date = ?, location = ?, description = ?, tags = ?, people = ? WHERE id = ?", (name, date, location, desc, tags, people, event_id,))
+    if c.execute("SELECT user FROM events WHERE id = ?", (event_id,)).fetchone()[0] == user:
+        c.execute("UPDATE events SET name = ?, date = ?, location = ?, description = ?, tags = ?, people = ? WHERE id = ?", (name, date, location, desc, tags, people, event_id,))
     db.commit()
     db.close()
