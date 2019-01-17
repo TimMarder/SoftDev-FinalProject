@@ -140,7 +140,7 @@ def create_event():
                 emails = emails.split(",")
                 msg = Message(subject = "You have been invited to: " + event_name,
                               sender = "eventcalendar.stuy@gmail.com",
-                              #reply_to = session.get("user"),
+                              reply_to = session.get("user"),
                               recipients = emails)
                 message = session.get("user") +  " has invited you to their event on " + event_month + "/" + event_day + "/" + event_year + "."
                 message += ("\nDescription: " + event_desc)
@@ -274,6 +274,22 @@ def edit_event(event_id):
         else:
             event_datetime = datetime(int(event_year), int(event_month), int(event_day), int(event_hour), int(event_minute))
             update_event(session.get("user"), event_id, event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
+
+            # send an email to update those invited
+
+            if event_people:
+                emails = event_people.strip(",").strip()
+                emails = emails.split(",")
+                msg = Message(subject = "You have been invited to: " + event_name,
+                              sender = "eventcalendar.stuy@gmail.com",
+                              reply_to = session.get("user"),                                                                                                                                      
+                              recipients = emails)
+                message = session.get("user") +  " has invited you and updated their event on " + event_month + "/" + event_day + "/" + event_year + "."
+                message += ("\nDescription: " + event_desc)
+                message += ("\nLocation: " + event_location)
+                msg.body = message
+                mail.send(msg)
+            
             return redirect(url_for("index"))
 
 @app.route("/event_location_image/<int:event_id>")
