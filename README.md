@@ -54,10 +54,11 @@ $ python app.py
 
 ### APIs
 
-1. Holiday API
-   - Sign up [here](https://holidayapi.com/) to receive a key
+1. CalendarIndex API
+   - Sign up [here](https://www.calendarindex.com/signup) to receive a key 
+      - Note: It takes a bit of time to receive key from them
    - API responds with a dictionary of holidays and their dates
-   - We used this API in our calendar
+   - We used this API for holiday events
 2. Openstaticmap API
    - Sign up [here](https://developer.mapquest.com/) to receive a key
    - API shows a map of a chosen area
