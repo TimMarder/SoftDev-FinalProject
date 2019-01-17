@@ -14,7 +14,7 @@ app.secret_key = urandom(32)
 #OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
 #HOLIDAY_KEY = "4ee45cd4aaa1b5179955938e84952c270cfb8563"
 
-with open('data/keys.json', 'r') as f:
+with open("data/keys.json", 'r') as f:
     api_dict = json.load(f)
 
 MAPQUEST_KEY = api_dict["MAPQUEST_KEY"]
@@ -298,6 +298,10 @@ def kelvin_to_farenheight(k):
     return (k - 273.15) * 1.8 + 32
 
 if __name__ == "__main__":
-    create_table(get_holidays()) # Only creates a table if it doesn't already exist
-    app.debug = True;
-    app.run()
+    try:
+        create_table(get_holidays()) # Only creates a table if it doesn't already exist
+    except:
+        print("It appears there is an issue with your API keys. Please check that they are all in keys.json, and that they are all correct.")
+    else:
+        app.debug = True;
+        app.run()
