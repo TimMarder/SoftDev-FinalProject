@@ -16,8 +16,16 @@
             {% for i in contact_list %}
                 <hr>
                 <b>{{i["first"]}} {{i["last"]}}</b><br>
-                Email: <a href = "mailto: {{ i['email'] }}" >{{i["email"]}}</a> <br>
-                Address: {{i["address"]}}<br>
+
+		{% if i["email"] != "" %}
+
+		Email: <a href = "mailto: {{ i['email'] }}" >{{i["email"]}}</a> <br>{%endif%}
+		{% if i["address"] != "" %}
+
+		Address: {{i["address"]}}<br>{%endif%}
+
+		{% if i["bday"] != "" %}
+		Birthday: {{i["bday"]}}{%endif%}
             {% endfor %}
             <hr>
         </div>

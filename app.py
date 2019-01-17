@@ -200,7 +200,6 @@ def user_suggestions():
 def test():
     return render_template("test.html")
 
-
 @app.route("/contacts")
 def contacts():
     if not "user" in session:
@@ -216,12 +215,30 @@ def add_contacts():
     if request.method == "GET":
         return render_template("add_contact.html", user = session.get("user"))
     else:
+        
+
+        
         fname = request.form.get("fname")
         lname = request.form.get("lname")
         email = request.form.get("email")
         bday = request.form.get("bday")
         address = request.form.get("address")
+
+        if (not fname) or (not lname):
+            flash("First name and last name are required fields.")
+            return redirect("/add_contacts")
+
+
         add_contact(session['user'], fname, lname, email, bday, address)
+
+        event_name = fname + " " + lname + "'s Birthday"
+        event_desc = fname + " " + lname + "'s Birthday"
+        bday = bday.split("/")
+        event_datetime = "2019-" + "-".join(bday) +"  00:00:00"
+        event_location = ""
+        event_tags = ""
+        event_people = ""
+        add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people)        
         return (redirect("/contacts"))
 
 @app.route("/decline_event/<int:event_id>")

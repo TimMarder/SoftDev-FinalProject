@@ -4,10 +4,28 @@
 
 {% block content %}
 
+
+
+
+
+
     <div class = "row">
         <div class = "col-lg-3 col-md-3 col-sm-2 col-xs-1"></div>
         <div class = "col-lg-6 col-md-6 col-sm-8 col-xs-10">
-            <form class = "auth-form" method = "POST" action = "{{ url_for('login') }}">
+<br>
+<h1 style = "color: dodgerblue; font-weight: 300;">EventCalendar</h1>
+
+A resource for:
+<ul>
+  <li>Viewing holidays
+  <li>Creating events: inviting friends, seeing forecast, storing location
+  <li> Storing contacts in our Address Book
+</ul>
+
+    
+
+	  
+	  <form class = "auth-form" method = "POST" action = "{{ url_for('login') }}">
                 <h2>Login</h2>
 
                 {% with messages = get_flashed_messages() %}
