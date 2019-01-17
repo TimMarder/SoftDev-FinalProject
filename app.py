@@ -283,9 +283,62 @@ def event_location_image(event_id):
 
 @app.route("/forecast/<int:event_id>")
 def forecast(event_id):
-    print("YES")
     event = get_event_by_id(event_id)
     return get_location_weather(event[3], event[2])
+
+# enter in email address
+@app.route("/recover_password")
+def recover_password():
+    return render_template("change_password.html")
+
+# if email exists, answer security question
+@app.route("/security_ques", methods = ["GET", "POST"])
+def security_ques():
+    if request.method == "POST":
+        e = request.form.get("email")
+        a = get_securityques(e)
+        if email_exists(e):
+            session['email'] = e
+            session['question'] = a[0][0]
+            return render_template("securityq.html", email = request.form.get("email"), question = session['question'])
+        else:
+            flash("Email does not exist")
+            return redirect("/recover_password")
+    if request.method == "GET":
+        return render_template("securityq.html", email = session['email'], question = session['question'])
+
+# if security question is answererd correctly, allow user to reset password
+@app.route("/answer", methods = ["GET", "POST"])
+def reset():
+    if request.method == "POST":
+        answer = request.form.get("answer")
+        check = get_securityans(session["email"])[0][0]
+        if answer == check:        
+            return render_template("reset_password.html", email = session["email"])
+        flash("Incorrect answer")
+        return redirect("/security_ques")
+    if request.method == "GET":
+        return render_template("reset_password.html", email = session["email"])
+    
+#check if answer match. If they do, redirect to login. If not, redirect to /answer
+@app.route("/check_answers", methods = ["GET", "POST"])
+def check_answers():
+    if request.method == "POST":
+        p1 = request.form.get("p1")
+        p2 = request.form.get("p2")
+        if not (p1 and p2):
+            flash("All fields are required")
+            return redirect("/answer")
+        if p1 == p2:
+            if len(p1) < 5:
+                flash("Password must be 5 characters or longer")
+                return redirect("/answer")
+            resetpassword(session['email'], p1)
+            flash("Your password has succesfully been reset!")
+            return redirect("/")
+        else:
+            flash("Passwords do not match")
+            return redirect("/answer")
 
 # def generate_event_tuple(event):
 #     return (event, get_location_image(event[3]), datetime.strptime(event[2], "%Y-%m-%d %H:%M:%S").strftime("%A, %B %d %Y at %I:%M%p"), event[7], get_location_weather(event[3], event[2]) )

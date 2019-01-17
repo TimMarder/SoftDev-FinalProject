@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{%block content %}
+
+<div class = "col-lg-6 col-md-6 col-sm-8 col-xs-10">
+
+<form class = "auth-form" method = "POST" action = "{{ url_for('reset') }}">
+
+  <h2>Security Question</h2>
+  <br>
+
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+
+  <b>{{email}}<br></b><br>
+  <b>Security question: </b>{{question}}
+  <br><br>
+  Answer: <br>
+    <div class="answer-group">
+      <input type="text" class="form-control" id="answer-input" name="answer">
+    </div><br>
+    <a class="btn btn-danger" href="/" role="button" style = "margin: 10px;">Cancel</a>
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</div>
+  
+
+
+{%endblock %}

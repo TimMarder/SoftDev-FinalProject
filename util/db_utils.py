@@ -184,3 +184,41 @@ def update_event(user, event_id, name, desc, date, location, tags, people):
         c.execute("UPDATE events SET name = ?, date = ?, location = ?, description = ?, tags = ?, people = ? WHERE id = ?", (name, date, location, desc, tags, people, event_id,))
     db.commit()
     db.close()
+
+def email_exists(email):
+    db = sqlite3.connect(DB_FILE)
+    print("email : " + str(email))
+    c = db.cursor()
+    l = c.execute("SELECT * FROM users where email = ?", (email,)).fetchall()
+    db.commit()
+    db.close()
+    return len(l) >= 1
+
+# get security question for a certain email
+def get_securityques(user):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "SELECT security_question FROM users where email = ?"
+    q = c.execute(command, (user,)).fetchall()
+    db.commit()
+    db.close()
+    return q
+
+def get_securityans(user):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "SELECT security_answer FROM users where email = ?"
+    q = c.execute(command, (user,)).fetchall()
+    db.commit()
+    db.close()
+    return q
+
+# reset password for user
+def resetpassword(user, password):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    params = (md5_crypt.hash(password), user)
+    c.execute("UPDATE users SET password = ? WHERE email = ?", params)
+    db.commit()
+    db.close()
+    
