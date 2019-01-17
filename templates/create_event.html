@@ -88,7 +88,7 @@
                     </div>
                     <select name = "minute" class="custom-select" id="inputGroupSelect03" style="border-left-width: 0;">
                         <option value="" disabled selected>Minute</option>
-                        {% for i in range(0, 60) %}
+                        {% for i in range(0, 60, 15) %}
                         <option value="{{ '%02d' % i }}">{{ '%02d' % i }}</option>
                         {% endfor %}
                     </select>
