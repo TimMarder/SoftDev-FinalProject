@@ -228,6 +228,24 @@ def add_contacts():
             flash("First name and last name are required fields.")
             return redirect("/add_contacts")
 
+        if bday:
+            if len(bday) != 5 :
+                flash ("Birthday not in correct format")
+                return redirect("/add_contacts")
+            if bday[2] != "/":
+                flash ("Birthday not in correct format")
+                return redirect("/add_contacts")
+            try:
+                if int(bday[:2]) > 12:
+                    flash("Please enter a valid date")
+                    return redirect("/add_contacts")
+                if int(bday[3:]) > 31:
+                    flash("Please enter a valid date")
+                    return redirect("/add_contacts")
+            except:
+                flash("Please enter a valid date")
+                return redirect("/add_contacts")
+
 
         add_contact(session['user'], fname, lname, email, bday, address)
 
