@@ -10,10 +10,17 @@ from util.db_utils import *
 app = Flask(__name__)
 app.secret_key = urandom(32)
 
-MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
-OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
+#MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
+#OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
+#HOLIDAY_KEY = "4ee45cd4aaa1b5179955938e84952c270cfb8563"
+
+with open('data/keys.json', 'r') as f:
+    api_dict = json.load(f)
+
+MAPQUEST_KEY = api_dict["MAPQUEST_KEY"]
+OPEN_WEATHER_MAP_KEY = api_dict["OPEN_WEATHER_MAP_KEY"]
+HOLIDAY_KEY = api_dict["HOLIDAY_KEY"]
 HOLIDAY_STUB = "https://www.calendarindex.com/api/v1/holidays?country=US&year=2019&api_key="
-HOLIDAY_KEY = "4ee45cd4aaa1b5179955938e84952c270cfb8563"
 HOLIDAY_URL = HOLIDAY_STUB + HOLIDAY_KEY
 
 #email configuration
