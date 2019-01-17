@@ -138,7 +138,7 @@ def create_event():
             if event_people:
                 emails = event_people.strip(",").strip()
                 emails = emails.split(",")
-                msg = Message(subject = "You have been invited to an event on: ",
+                msg = Message(subject = "You have been invited to: " + event_name,
                               sender = "eventcalendar.stuy@gmail.com",
                               #reply_to = session.get("user"),
                               recipients = emails)
