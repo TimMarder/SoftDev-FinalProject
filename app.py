@@ -145,7 +145,7 @@ def create_event():
                 message = session.get("user") +  " has invited you to their event on " + event_month + "/" + event_day + "/" + event_year + "."
                 message += ("\nDescription: " + event_desc)
                 message += ("\nLocation: " + event_location)
-                message += "Sign up for EventCalendar: https://github.com/VinnyLin72/SoftDev-FinalProject"
+                message += "\nSign up for EventCalendar: https://github.com/VinnyLin72/SoftDev-FinalProject"
 
                 
                 msg.body = message
@@ -324,7 +324,7 @@ def edit_event(event_id):
                 message = session.get("user") +  " has invited you and updated their event on " + event_month + "/" + event_day + "/" + event_year + "."
                 message += ("\nDescription: " + event_desc)
                 message += ("\nLocation: " + event_location)
-                message += "Sign up for EventCalendar: https://github.com/VinnyLin72/SoftDev-FinalProject"
+                message += "\Sign up for EventCalendar: https://github.com/VinnyLin72/SoftDev-FinalProject"
                 msg.body = message
                 mail.send(msg)
             
