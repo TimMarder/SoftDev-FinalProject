@@ -8,6 +8,7 @@
 EventCalendar is a tool that organizes events and allows users to share events with people through email.  
 Holidays can be viewed, users can create events, and users can maintain an address book with their contacts.  
 When viewing events, location and forecast are displayed with the events for which this data is available.
+Inviting others to events with accounts allows them to accept the event and add to their own event list.
 
 
 ## Instructions
@@ -68,6 +69,7 @@ $ python app.py
 1. Click the "Create Event" button. You will be led to a form to create an event. 
 2. Fill out this form. If you input a location, make sure that the address is complete. This way, when viewing your events, you will be able to see the location on a map, as well as the forecast for the event once this data becomes available.
 3. If you have contacts in your Address Book, when you invite people you'll have autofill. Inviting people will send them an email with a description of the event.
+3. If those you have invited have/create an account, they will be able to accept/decline the invite on their own event lists.
 
 ### To Add Contacts
 
