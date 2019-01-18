@@ -10,6 +10,7 @@ Holidays can be viewed, users can create events, and users can maintain an addre
 When viewing events, location and forecast are displayed with the events for which this data is available.
 Inviting others to events with accounts allows them to accept the event and add to their own event list.
 
+[Our video demo here](https://youtu.be/uc29cA1Zr88)
 
 ## Instructions
 
@@ -66,7 +67,7 @@ $ python app.py
 
 ### To Create an Event:
 
-1. Click the "Create Event" button. You will be led to a form to create an event. 
+1. Click the "Create Event" button. You will be led to a form to create an event.
 2. Fill out this form. If you input a location, make sure that the address is complete. This way, when viewing your events, you will be able to see the location on a map, as well as the forecast for the event once this data becomes available.
 3. If you have contacts in your Address Book, when you invite people you'll have autofill. Inviting people will send them an email with a description of the event.
 3. If those you have invited have/create an account, they will be able to accept/decline the invite on their own event lists.
@@ -74,19 +75,19 @@ $ python app.py
 ### To Add Contacts
 
 1. Click the "Address Book" button in the upper right hand corner. Here, you'll be able to view your contacts.
-2. Click the "Add contacts" button. You'll be led to a form to create an event. 
-3. If you add a birthday for your contact, then the birthday will appear in your events list. 
+2. Click the "Add contacts" button. You'll be led to a form to create an event.
+3. If you add a birthday for your contact, then the birthday will appear in your events list.
 
 ### To Edit an Event:
 
-1. Go to your events list on the landing page. 
+1. Go to your events list on the landing page.
 2. On the event that you'd like to edit, click the three small dots, and select "edit."
 3. You'll be  led to a form where you can edit your event.
 4. If you change the invited people, the emails on the new input will be emailed that they have been invited to an event that you have updated.
 
-### To Delete an Event: 
+### To Delete an Event:
 
-1. Go to your events list on the landing page. 
+1. Go to your events list on the landing page.
 2. On the event that you'd like to delete, click the three small dots, and select "delete."
 
 
@@ -104,7 +105,7 @@ $ python app.py
 ### APIs
 
 1. CalendarIndex API
-   - Sign up [here](https://www.calendarindex.com/signup) to receive a key 
+   - Sign up [here](https://www.calendarindex.com/signup) to receive a key
       - Note: It takes a bit of time to receive key from them
    - API responds with a dictionary of holidays and their dates
    - We used this API for holiday events
@@ -114,6 +115,5 @@ $ python app.py
    - We used this API to display the locations of events
 3. Openweathermap API
    - Sign up [here](https://openweathermap.org/api) to receive a key
-   - API tells us the weather for an area by name, coordinates, zip code or city id 
+   - API tells us the weather for an area by name, coordinates, zip code or city id
    - We used this API to display the weather at the time and place of the event
-
