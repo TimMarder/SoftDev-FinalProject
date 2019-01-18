@@ -13,6 +13,7 @@ app.secret_key = urandom(32)
 with open("data/keys.json", 'r') as f:
     api_dict = json.load(f)
 
+# api keys
 MAPQUEST_KEY = api_dict["MAPQUEST_KEY"]
 OPEN_WEATHER_MAP_KEY = api_dict["OPEN_WEATHER_MAP_KEY"]
 HOLIDAY_KEY = api_dict["HOLIDAY_KEY"]
@@ -30,6 +31,7 @@ app.config.update(dict(
     MAIL_PASSWORD = 'Eventcalendar!1',
 ))
 
+# for sending email
 mail = Mail(app)
 
 # login page
@@ -80,7 +82,7 @@ def signup():
         confirm_password = request.form.get("confirm-password")
         security_question = request.form.get("security-question")
         security_answer = request.form.get("security-question")
-
+        # make sure input is valid
         if not (name and email and password and confirm_password and security_question and security_answer):
             flash("All fields are required")
             return redirect(url_for("signup"))
@@ -131,6 +133,7 @@ def create_event():
             flash("Name, description, and date are mandatory")
             return redirect(url_for("create_event"))
         else:
+            # send email to those invited
             if event_people:
                 emails = event_people.strip(",").strip()
                 emails = emails.split(",")
@@ -150,7 +153,7 @@ def create_event():
             add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people.strip())
             return redirect(url_for("index"))
 
-
+# get lat and long for location
 def process_location(location):
     if location == "":
         return (None, None)
@@ -169,6 +172,7 @@ def get_location_image(location):
     img_url = json_response["results"][0]["locations"][0]["mapUrl"]
     return img_url
 
+# use API to get weather
 def get_location_weather(location, dt):
     date = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
     lat, lng = process_location(location)
@@ -198,6 +202,7 @@ def user_suggestions():
 def test():
     return render_template("test.html")
 
+# get all contacts for user, display
 @app.route("/contacts")
 def contacts():
     if not "user" in session:
@@ -246,7 +251,7 @@ def add_contacts():
 
 
         add_contact(session['user'], fname, lname, email, bday, address)
-
+        # add birthday to events
         event_name = fname + " " + lname + "'s Birthday"
         event_desc = fname + " " + lname + "'s Birthday"
         bday = bday.split("/")
@@ -257,6 +262,7 @@ def add_contacts():
         add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people)
         return (redirect("/contacts"))
 
+# decline an event
 @app.route("/decline_event/<int:event_id>")
 def decline_event(event_id):
     if not "user" in session:
@@ -264,6 +270,7 @@ def decline_event(event_id):
     remove_from_pending(session.get("user"), event_id)
     return redirect(request.referrer)
 
+# accept an event
 @app.route("/accept_event/<int:event_id>")
 def accept_event(event_id):
     if not "user" in session:
@@ -272,6 +279,7 @@ def accept_event(event_id):
     clone_event(session.get("user"), event_id)
     return redirect(request.referrer)
 
+# delete an event
 @app.route("/delete_event/<int:event_id>")
 def delete_event(event_id):
     if not "user" in session:
@@ -279,6 +287,7 @@ def delete_event(event_id):
     delete_event_db(session.get("user"), event_id)
     return redirect(url_for("index"))
 
+# edit an event
 @app.route("/edit_event/<int:event_id>", methods=["GET", "POST"])
 def edit_event(event_id):
     if not "user" in session:
@@ -326,11 +335,13 @@ def edit_event(event_id):
 
             return redirect(url_for("index"))
 
+# get location image
 @app.route("/event_location_image/<int:event_id>")
 def event_location_image(event_id):
     event = get_event_by_id(event_id)
     return get_location_image(event[3])
 
+# get forecast for location/time
 @app.route("/forecast/<int:event_id>")
 def forecast(event_id):
     event = get_event_by_id(event_id)
