@@ -75,8 +75,7 @@ Invites sent to other users via pending events section on landing page
 Events will show weather forecast for the time of the event
 
 claraM: 2019-01-16
-
-
+Finished holiday functionality; holidays show up as events
 
 jaredA: 2019-01-16:
 Events can now be deleted from the landing page
