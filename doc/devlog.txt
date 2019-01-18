@@ -93,3 +93,4 @@ Added functionality for users to reset their passwords if they have forgotten th
 Changed add contacts to allow for more flexibility as to what is put in the form
 Birthdays of contacts with birthdays show up on events page
 Added brief description to login page regarding functionality of page
+Added flash messages to make more robust
