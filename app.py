@@ -10,10 +10,6 @@ from util.db_utils import *
 app = Flask(__name__)
 app.secret_key = urandom(32)
 
-#MAPQUEST_KEY = "yRodQSl7GmyquNByYNcBBehTRM2F3Lgc"
-#OPEN_WEATHER_MAP_KEY = "6bec20ccfcf2531d61bf02956f6049bb"
-#HOLIDAY_KEY = "4ee45cd4aaa1b5179955938e84952c270cfb8563"
-
 with open("data/keys.json", 'r') as f:
     api_dict = json.load(f)
 
@@ -147,7 +143,7 @@ def create_event():
                 message += ("\nLocation: " + event_location)
                 message += "\nSign up for EventCalendar: https://github.com/VinnyLin72/SoftDev-FinalProject"
 
-                
+
                 msg.body = message
                 mail.send(msg)
             event_datetime = datetime(int(event_year), int(event_month), int(event_day), int(event_hour), int(event_minute))
@@ -217,9 +213,9 @@ def add_contacts():
     if request.method == "GET":
         return render_template("add_contact.html", user = session.get("user"))
     else:
-        
 
-        
+
+
         fname = request.form.get("fname")
         lname = request.form.get("lname")
         email = request.form.get("email")
@@ -258,7 +254,7 @@ def add_contacts():
         event_location = ""
         event_tags = ""
         event_people = ""
-        add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people)        
+        add_event(session["user"], event_name, event_desc, event_datetime, event_location, event_tags, event_people)
         return (redirect("/contacts"))
 
 @app.route("/decline_event/<int:event_id>")
@@ -319,7 +315,7 @@ def edit_event(event_id):
                 emails = emails.split(",")
                 msg = Message(subject = "You have been invited to: " + event_name,
                               sender = "eventcalendar.stuy@gmail.com",
-                              reply_to = session.get("user"),                                                                                                                                      
+                              reply_to = session.get("user"),
                               recipients = emails)
                 message = session.get("user") +  " has invited you and updated their event on " + event_month + "/" + event_day + "/" + event_year + "."
                 message += ("\nDescription: " + event_desc)
@@ -327,7 +323,7 @@ def edit_event(event_id):
                 message += "\nSign up for EventCalendar: https://github.com/VinnyLin72/SoftDev-FinalProject"
                 msg.body = message
                 mail.send(msg)
-            
+
             return redirect(url_for("index"))
 
 @app.route("/event_location_image/<int:event_id>")
@@ -367,13 +363,13 @@ def reset():
     if request.method == "POST":
         answer = request.form.get("answer")
         check = get_securityans(session["email"])[0][0]
-        if answer == check:        
+        if answer == check:
             return render_template("reset_password.html", email = session["email"])
         flash("Incorrect answer")
         return redirect("/security_ques")
     if request.method == "GET":
         return render_template("reset_password.html", email = session["email"])
-    
+
 #check if answer match. If they do, redirect to login. If not, redirect to /answer
 @app.route("/check_answers", methods = ["GET", "POST"])
 def check_answers():
