@@ -82,3 +82,8 @@ jaredA: 2019-01-16:
 Events can now be deleted from the landing page
 Events can now be edited from the landing page
 Made front-end a lot faster by loading images and weather forecasts asynchronously
+
+vincentL: 2019-01-17
+Updated design doc
+	- Now uses calendar index api instead of holiday api
+	- Updated functionalities
