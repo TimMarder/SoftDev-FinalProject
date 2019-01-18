@@ -87,3 +87,9 @@ vincentL: 2019-01-17
 Updated design doc
 	- Now uses calendar index api instead of holiday api
 	- Updated functionalities
+
+claraM: 2019-01-17
+Added functionality for users to reset their passwords if they have forgotten them
+Changed add contacts to allow for more flexibility as to what is put in the form
+Birthdays of contacts with birthdays show up on events page
+Added brief description to login page regarding functionality of page
